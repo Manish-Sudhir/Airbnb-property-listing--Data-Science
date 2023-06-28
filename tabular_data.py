@@ -28,14 +28,14 @@ if __name__ == "__main__" :
     dfClean.to_csv('listingClean.csv')
 
 
-def load_airbnb(label='price_night'):
+def load_airbnb(label='Price_Night'):
     # Read the CSV file into a DataFrame
     df = pd.read_csv('listing.csv')
     
     # Filter out columns with text data
     numerical_columns = ['Cleanliness_rating', 'Accuracy_rating', 'Communication_rating',
                          'Location_rating', 'Check-in_rating', 'Value_rating',
-                         'guests', 'beds', 'bathrooms', 'price_night']
+                         'guests', 'beds', 'bathrooms', 'Price_Night']
     df_numerical = df[numerical_columns]
     
     # Remove the label from the features and assign it as the labels
