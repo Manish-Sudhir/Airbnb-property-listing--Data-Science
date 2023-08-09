@@ -4,6 +4,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import SGDRegressor
 from tabular_data import load_airbnb
+import os
+import joblib
+import json
 
 def preprocess_data(features, labels):
     # Preprocess your data here (imputation, scaling, etc.)
@@ -47,6 +50,25 @@ def tune_regression_model_hyperparameters(model, param_grid, X_train, y_train, X
     
     return best_model, best_hyperparameters
 
+def save_model(model, hyperparameters, metrics, folder):
+    # Create the folder if it doesn't exist
+    os.makedirs(folder, exist_ok=True)
+
+    # Save the trained model to a file
+    model_file = os.path.join(folder, 'model.joblib')
+    joblib.dump(model, model_file)
+
+    # Save the hyperparameters to a JSON file
+    hyperparameters_file = os.path.join(folder, 'hyperparameters.json')
+    with open(hyperparameters_file, 'w') as f:
+        json.dump(hyperparameters, f, indent=4)
+
+    # Save the performance metrics to a JSON file
+    metrics_file = os.path.join(folder, 'metrics.json')
+    with open(metrics_file, 'w') as f:
+        json.dump(metrics, f, indent=4)
+
+
 def main():
     # Load the dataset with 'price_night' as the label
     features, labels = load_airbnb()
@@ -73,6 +95,10 @@ def main():
     # Evaluate the final model on the test set
     test_rmse, test_r2, mse = evaluate_model(final_model, X_test, y_test)
     
+    # Save the model, hyperparameters, and metrics
+    folder_path = "models/regression/linear_regression"
+    save_model(final_model, best_hyperparameters, {"test_RMSE": test_rmse, "test_R2": test_r2, "MSE": mse}, folder_path)
+
     print("Best Hyperparameters:", best_hyperparameters)
     print("Test RMSE:", test_rmse)
     print("Test R2:", test_r2)
