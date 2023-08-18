@@ -173,7 +173,7 @@ def find_best_model(models_folder):
 
 def main():
     # Load the dataset with 'price_night' as the label
-    features, labels = load_airbnb()
+    features, labels = load_airbnb(label='Price_Night')
 
     # Evaluate all models
     evaluate_all_models(features, labels)

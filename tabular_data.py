@@ -30,7 +30,7 @@ if __name__ == "__main__" :
     dfClean.to_csv('listingClean.csv')
 
 
-def load_airbnb(label='Price_Night'):
+def load_airbnb(label):
     # Read the CSV file into a DataFrame
     df = pd.read_csv('listing.csv')
     
