@@ -13,7 +13,7 @@ import joblib
 from sklearn.metrics import mean_squared_error, r2_score
 import time
 from datetime import datetime
-
+import itertools
 
 
 # Define your AirbnbNightlyPriceRegressionDataset class
@@ -74,55 +74,6 @@ class NNModel(nn.Module):
     def forward(self,X):
         return self.layers(X)
     
-
-# def train(model, train_dataloader, val_dataloader, test_dataloader, config, num_epochs=10):
-#     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
-#     criterion = nn.MSELoss()
-#     for epoch in range(num_epochs):
-#         model.train()  # Set the model to training mode
-#         for batch_features, batch_labels in train_dataloader:
-#             optimizer.zero_grad()
-#             outputs = model(batch_features)
-#             loss = criterion(outputs, batch_labels.view(-1,1).float())
-#             loss.backward()
-#             optimizer.step()
-#             # Write training loss to TensorBoard
-#             writer.add_scalar('Training Loss', loss.item(), global_step=epoch)
-        
-#         model.eval()  # Set the model to evaluation mode
-#         val_loss = 0.0
-#         val_rmse = 0.0
-#         val_r2 = 0.0
-#         start_inference_time = time.time()
-
-#         with torch.no_grad(): 
-#             for batch_features, batch_labels in val_dataloader:
-#                 outputs = model(batch_features)
-#                 val_loss += criterion(outputs, batch_labels.unsqueeze(1)).item()
-
-#                 # Calculate RMSE and R^2
-#                 val_rmse += mean_squared_error(batch_labels, outputs)**0.5
-#                 val_r2 += r2_score(batch_labels, outputs)
-            
-#             # Calculate and write average validation loss, latency, rmse and r2 for the epoch
-#             inference_latency = (time.time() -start_inference_time) /len(val_dataloader)
-#             val_loss /= len(val_dataloader)
-#             val_rmse /= len(val_dataloader)
-#             val_r2 /= len(val_dataloader)
-
-#             # Save metrics and model after each epoch
-#             metrics = {
-#                 'RMSE_loss_val': val_rmse,
-#                 'R_squared_val': val_r2,
-#                 'inference_latency': inference_latency
-#             }
-#             save_folder = os.path.join('models/neural_networks/regression', datetime.now().strftime('%Y-%m-%d_%H:%M:%S'))
-#             save_model(model, config, metrics, save_folder)
-
-#             writer.add_scalar('Validation Loss', val_loss, global_step=epoch)
-        
-#             print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss:.4f}")
-
 def train(model, train_dataloader, val_dataloader, test_dataloader, config, num_epochs=10):
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
     criterion = nn.MSELoss()
@@ -213,6 +164,7 @@ def evaluate_model(model, dataloader):
 
 
 
+
 # # New save_model function
 # def save_model(model, hyperparameters, metrics, folder):
 #     os.makedirs(folder, exist_ok=True)
@@ -230,6 +182,10 @@ def evaluate_model(model, dataloader):
 #     metrics_file = os.path.join(folder, 'metrics.json')
 #     with open(metrics_file, 'w') as f:
 #         json.dump(metrics, f, indent=4)
+
+
+
+
 
 def save_model(model, hyperparameters, metrics, folder):
     os.makedirs(folder, exist_ok=True)
@@ -271,15 +227,8 @@ if __name__ == "__main__":
     hidden_size = config['hidden_layer_width']
     output_size = 1  # Regression task, predicting a single value
     model = NNModel(input_size, hidden_size, output_size, config=config)
-    # # Train the model
-    # train(model, train_dataloader, val_dataloader, test_dataloader, config, num_epochs=10)
-
-    # # Create a timestamped folder for saving the model and metrics
-    # timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    # save_folder = os.path.join("models", "neural_networks", "regression", timestamp)
+    
  # Train the model
     model_folder = os.path.join('models/neural_networks/regression', datetime.now().strftime('%Y-%m-%d_%H:%M:%S'))
     train(model, train_dataloader, val_dataloader, test_dataloader, config, num_epochs=10)
-    
-    # Save the trained model, hyperparameters, and metrics
-    save_model(model, config, model_folder)
+    train_dataloader
