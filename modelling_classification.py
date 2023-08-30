@@ -3,6 +3,7 @@ import os
 import joblib
 import json
 from sklearn.impute import SimpleImputer
+from tabular_data import clean_tabular_data
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -13,7 +14,8 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 # Load Airbnb data for classification
 def load_airbnb_classification(label='Category'):
     df = pd.read_csv('listing.csv')
-    df_cleaned = df.dropna(subset=[label])
+    df_cleaned = clean_tabular_data(df)
+    df_cleaned = df_cleaned.dropna(subset=[label])
     df_cleaned = df_cleaned[~df['guests'].apply(lambda x: isinstance(x, str) and 'Somerford Keynes England Unit' in x)]
     labels = df_cleaned[label]
     features = df_cleaned.drop(columns=[label])
@@ -25,8 +27,8 @@ def preprocess_data(features):
                          'guests', 'beds', 'bathrooms']
     non_numeric_columns = [col for col in features.columns if col not in numerical_columns]
 
-    imputer = SimpleImputer(strategy='mean')
-    features[numerical_columns] = imputer.fit_transform(features[numerical_columns])
+    # imputer = SimpleImputer(strategy='mean')
+    # features[numerical_columns] = imputer.fit_transform(features[numerical_columns])
 
     features = features.drop(columns=non_numeric_columns)
     return features
@@ -102,18 +104,22 @@ def evaluate_all_models(features, labels, task_folder):
         'min_samples_split': [2, 5, 10]
     }
     random_forest_param_grid = {
-        'n_estimators': [50, 100, 200],
+        'n_estimators': [50, 100, 200, 150],
         'max_depth': [None, 10, 20],
-        'min_samples_split': [2, 5, 10]
+        'min_samples_split': [2, 5, 10],
+        'min_samples_leaf': [1, 2, 4]
     }
     gradient_boosting_param_grid = {
-        'n_estimators': [50, 100, 200],
-        'learning_rate': [0.01, 0.1, 0.2],
-        'max_depth': [3, 5, 10]
+        'n_estimators': [50, 100, 200, 150],
+        'learning_rate': [0.01, 0.1, 0.05],
+        'max_depth': [3, 5, 10],
+        'min_samples_split': [2, 5],
+        'min_samples_leaf': [1, 2]
     }
     logistic_regression_param_grid = {
         'C': [0.1, 1, 10],
-        'penalty': ['l2', None]
+        # 'penalty': ['l2', None],
+        'penalty': ['l1', 'l2', 'elasticnet', None]
     }
     
     # Models to evaluate

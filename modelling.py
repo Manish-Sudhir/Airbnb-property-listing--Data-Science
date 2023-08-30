@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.impute import SimpleImputer
 from sklearn.linear_model import SGDRegressor
 from tabular_data import load_airbnb
 import os
@@ -18,13 +17,13 @@ def preprocess_data(features, labels):
     X_train, X_temp, y_train, y_temp = train_test_split(features, labels, test_size=0.3, random_state=42)
     X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
     
-    # Impute missing values in features
-    imputer = SimpleImputer(strategy='mean')
-    X_train_imputed = imputer.fit_transform(X_train)
-    X_val_imputed = imputer.transform(X_val)
-    X_test_imputed = imputer.transform(X_test)
+    # # Impute missing values in features
+    # imputer = SimpleImputer(strategy='mean')
+    # X_train_imputed = imputer.fit_transform(X_train)
+    # X_val_imputed = imputer.transform(X_val)
+    # X_test_imputed = imputer.transform(X_test)
 
-    return X_train_imputed, y_train, X_val_imputed, y_val, X_test_imputed, y_test
+    return X_train, y_train, X_val, y_val, X_test, y_test
 
 def train_model(model_class, hyperparameters, X_train, y_train):
     # Initialize and train the model with given hyperparameters
@@ -77,22 +76,30 @@ def evaluate_all_models(features, labels):
     
     # Define hyperparameter grids for each model
     decision_tree_param_grid = {
-        'max_depth': [None, 10, 20],
-        'min_samples_split': [2, 5, 10]
+        'max_depth': [None, 10, 20, 15, 5],
+        'min_samples_split': [2, 5, 10, 8, 12],
+        'min_samples_leaf': [1, 2, 4, 3, 5, 7]
+        # 'max_features': ['auto', 'sqrt', 'log2']
     }
     random_forest_param_grid = {
-        'n_estimators': [50, 100, 200],
-        'max_depth': [None, 10, 20],
-        'min_samples_split': [2, 5, 10]
+        'n_estimators': [50, 100, 200, 150],
+        'max_depth': [None, 10, 20, 15, 25],
+        'min_samples_split': [2, 5, 10, 8],
+        'min_samples_leaf': [1, 2, 3, 5, 7, 8]
+        # 'max_features': ['auto', 'sqrt', 'log2']
     }
     gradient_boosting_param_grid = {
-        'n_estimators': [50, 100, 200],
-        'learning_rate': [0.01, 0.1, 0.2],
-        'max_depth': [3, 5, 10]
+        'n_estimators': [150, 100, 200, 50],
+        'learning_rate': [0.01, 0.1, 0.2, 0.05, 0.5],
+        'max_depth': [3, 5, 10, 6, 4],
+        'min_samples_split': [2, 5, 10, 12, 15],
+        'min_samples_leaf': [1, 2, 4, 5 , 7, 3]
     }
     sgd_param_grid = {
-        'alpha': [0.0001, 0.001, 0.01],
-        'max_iter': [1000, 2000]
+        'alpha': [0.0001, 0.001, 0.01, 0.00001],
+        'max_iter': [1000, 2000, 5000, 3000 ],
+        'penalty': ['l1', 'l2', 'elasticnet'],
+        'l1_ratio': [0.1, 0.5, 0.9]
     }
     
     # Models to evaluate
@@ -131,7 +138,7 @@ def evaluate_all_models(features, labels):
         test_rmse, test_r2, mse = evaluate_model(final_model, X_test, y_test)
         
         # # Save the model, hyperparameters, and metrics
-        folder_path = f"models/regression/{model_name}"
+        folder_path = f"models/regression/test/{model_name}"
         save_model(final_model, best_hyperparameters, {"test_RMSE": test_rmse, "test_R2": test_r2, "MSE": mse}, folder_path)
         
         print(f"{model_name.capitalize()} - Best Hyperparameters:", best_hyperparameters)
@@ -174,13 +181,13 @@ def find_best_model(models_folder):
 
 def main():
     # Load the dataset with 'price_night' as the label
-    features, labels = load_airbnb(label='Price_Night')
+    features, labels = load_airbnb(label='beds')
 
     # Evaluate all models
     evaluate_all_models(features, labels)
 
     # Find the best model
-    best_model, best_hyperparameters, best_metrics = find_best_model("models/regression")
+    best_model, best_hyperparameters, best_metrics = find_best_model("models/regression/test")
 
     print("Best Model:", best_model)
     print("Best Hyperparameters:", best_hyperparameters)

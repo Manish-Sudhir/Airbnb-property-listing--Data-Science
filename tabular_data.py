@@ -33,12 +33,13 @@ if __name__ == "__main__" :
 def load_airbnb(label):
     # Read the CSV file into a DataFrame
     df = pd.read_csv('listing.csv')
-    
+    df_cleaned = clean_tabular_data(df)
+
     # Filter out columns with text data
     numerical_columns = ['Cleanliness_rating', 'Accuracy_rating', 'Communication_rating',
                          'Location_rating', 'Check-in_rating', 'Value_rating',
                          'guests', 'beds', 'bathrooms', 'Price_Night']
-    df_numerical = df[numerical_columns]
+    df_numerical = df_cleaned[numerical_columns]
 
     # Convert textual entries to 1 in numerical columns
     # df_cleaned = df_numerical.copy()

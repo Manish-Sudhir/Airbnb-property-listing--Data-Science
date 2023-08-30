@@ -206,9 +206,9 @@ def evaluate_model(model, dataloader):
 
 def generate_nn_configs():
     # Define the range of values for each hyperparameter
-    learning_rates = [0.001, 0.01, 0.1]
+    learning_rates = [0.001, 0.01, 0.1, 0.05, 0.005]
     hidden_layer_widths = [32, 64, 128]
-    depths = [1, 2, 3]
+    depths = [1, 2, 3, 5]
     
     # Generate all combinations of hyperparameters
     config_combinations = itertools.product(learning_rates, hidden_layer_widths, depths)

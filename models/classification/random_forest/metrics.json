@@ -1,7 +1,7 @@
 {
-    "test_accuracy": 0.3265993265993266,
-    "test_precision": 0.333425622900284,
-    "test_recall": 0.3265993265993266,
-    "test_f1": 0.3229643994138011,
-    "validation_accuracy": 0.31986531986531985
+    "test_accuracy": 0.3146067415730337,
+    "test_precision": 0.29599999366607493,
+    "test_recall": 0.3146067415730337,
+    "test_f1": 0.29170980447134975,
+    "validation_accuracy": 0.32209737827715357
 }

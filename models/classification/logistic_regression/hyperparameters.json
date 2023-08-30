@@ -1,4 +1,4 @@
 {
-    "C": 0.1,
-    "penalty": null
+    "C": 1,
+    "penalty": "l2"
 }
