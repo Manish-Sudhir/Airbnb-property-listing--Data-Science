@@ -19,7 +19,7 @@ cd Airbnb-property-listing--Data-Science
 
 3. Install the required packages:
 
-pip install -r requirements.txt
+pip install -r requirements.txt (have to work on creating this)
 
 
 ## Usage
@@ -43,7 +43,7 @@ This script preprocesses the data, tunes different classification models, evalua
 ### Neural Network Models
 
 1. Ensure you have the necessary dataset (`listing.csv`) in the repository.
-2. Run the `modelling_neural_network.py` script:
+2. Run the `modelling_nn.py` script:
 
 
 This script preprocesses the data, designs and trains neural network models, evaluates them, and saves the best model along with its performance metrics.
@@ -66,9 +66,7 @@ The repository includes various models and neural network architectures for diff
 - Logistic Regression Classifier
 
 ### Neural Networks:
-- Multi-Layer Perceptron (MLP)
-- Convolutional Neural Network (CNN)
-- Recurrent Neural Network (RNN)
+- ReLU
 
 ## Results
 
